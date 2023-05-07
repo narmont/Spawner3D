@@ -5,29 +5,31 @@ using UnityEngine;
 public class ObjectPool : MonoBehaviour
 {
     [SerializeField] private GameObject _container;
+   // private Enemy _enemy;
+    [SerializeField] private Enemy[] _enemys;
     [SerializeField] private int _capacity;
 
     private List<GameObject> _pools = new List<GameObject>();
 
-    protected void Initialize(GameObject prefab)
+    //protected void Initialize()
+    //{
+    //    for (int i = 0; i < _capacity; i++)
+    //    {
+    //        GameObject spawned = Instantiate(_enemy.gameObject, _container.transform);
+            
+    //        spawned.SetActive(false);
+
+    //        _pools.Add(spawned);
+    //    }
+    //}
+
+    protected void Initialize()
     {
         for (int i = 0; i < _capacity; i++)
         {
-            GameObject spawned = Instantiate(prefab, _container.transform);
+            int randomIndex = Random.Range(0, _enemys.Length);
             
-            spawned.SetActive(false);
-
-            _pools.Add(spawned);
-        }
-    }
-
-    protected void Initialize(GameObject[] prefabs)
-    {
-        for (int i = 0; i < _capacity; i++)
-        {
-            int randomIndex = Random.Range(0, prefabs.Length);
-            
-            GameObject spawned = Instantiate(prefabs[randomIndex], _container.transform);
+            GameObject spawned = Instantiate(_enemys[randomIndex].gameObject, _container.transform);
             
             spawned.SetActive(false);
 
