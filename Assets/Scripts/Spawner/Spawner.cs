@@ -1,38 +1,37 @@
+using System.Collections;
 using UnityEngine;
 
-public class Spawner : ObjectPool
+public class Spawner : EnemyPool
 {
-  //  [SerializeField] private GameObject[] _enemyTemplates;
     [SerializeField] private Transform[] _spawnPoints;
-    [SerializeField] private float _secondBerweenSpawn;
-
-    private float _elapsedTime = 0;
+    [SerializeField] private float _secondBetweenSpawn;
 
     private void Start()
     {
        Initialize();
+       StartCoroutine(SecondBetweenSpawn());
     }
 
-    private void Update()
+    private void SetEnemy(Enemy enemy, Vector3 spawnPoint)
     {
-        _elapsedTime += Time.deltaTime;
+        enemy.gameObject.SetActive(true);
+        enemy.transform.position = spawnPoint;
+    }
 
-        if(_elapsedTime > _secondBerweenSpawn )
+    private IEnumerator SecondBetweenSpawn()
+    {
+        var waitForSecond = new WaitForSeconds(_secondBetweenSpawn);
+
+        while(true)
         {
-            if (TryGetObject(out GameObject enemy))
+            if (TryGetEnemy(out Enemy enemy))
             {
-                _elapsedTime = 0;
-
                 int spawnPointNumber = Random.Range(0, _spawnPoints.Length);
 
                 SetEnemy(enemy, _spawnPoints[spawnPointNumber].position);
             }
-        }
-    }
 
-    private void SetEnemy(GameObject enemy, Vector3 spawnPoint)
-    {
-        enemy.SetActive(true);
-        enemy.transform.position = spawnPoint;
+            yield return waitForSecond;
+        }
     }
 }
